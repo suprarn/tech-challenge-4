@@ -1,4 +1,4 @@
-Dicionario - Obesity
+Dicionario - Obesity -- A primeira palavra de cada linha é como está escrito no arquivo csv.
 Gender — (Gênero) Sexo biológico. Valores: Female , Male .
 Age — (Idade) Idade em anos. Valores: numérico contínuo (mín 14, máx 61).
 Height — (Altura) Altura em metros. Valores: numérico contínuo (ex.: 1.45–1.98 m).
