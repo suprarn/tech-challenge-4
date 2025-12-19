@@ -13,6 +13,7 @@ import pickle
 from pathlib import Path
 
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 # Configuração da página
@@ -245,75 +246,270 @@ def pagina_predicao():
 
 
 def pagina_dashboard():
-    """Página do dashboard analítico."""
+    """Página do dashboard analítico com gráficos interativos."""
     st.title("📈 Dashboard Analítico")
     st.markdown("---")
     st.markdown(
         """
         ### Insights sobre Fatores de Risco para Obesidade
         
-        Visualizações baseadas na análise exploratória do dataset utilizado para treinamento do modelo.
+        Visualizações interativas baseadas na análise do dataset de treinamento.
         """
     )
 
-    # Verificar se os gráficos existem
-    if not PLOTS_DIR.exists():
-        st.error("Diretório de gráficos não encontrado. Execute a EDA primeiro.")
+    # Carregar dados
+    DATA_PATH = PROJECT_ROOT / "data" / "Obesity.csv"
+    if not DATA_PATH.exists():
+        st.error("Dataset não encontrado. Verifique o arquivo data/Obesity.csv")
         return
 
+    @st.cache_data
+    def carregar_dados():
+        df = pd.read_csv(DATA_PATH)
+        df.drop_duplicates(inplace=True)
+        # Criar BMI
+        df["BMI"] = df["Weight"] / (df["Height"] ** 2)
+        return df
+
+    df = carregar_dados()
+
     # Tabs para organizar os gráficos
-    tab1, tab2, tab3 = st.tabs(["📊 Distribuição do Target", "🔗 Análise Bivariada", "📉 Correlações"])
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📊 Distribuição do Target", 
+        "🔗 Análise Bivariada", 
+        "📉 Correlações",
+        "🔍 Explorador de Dados"
+    ])
 
     with tab1:
         st.subheader("Distribuição dos Níveis de Obesidade na População")
-        img_path = PLOTS_DIR / "1_target_distribution.png"
-        if img_path.exists():
-            st.image(str(img_path), use_container_width=True)
+        
+        # Gráfico de barras interativo
+        contagem = df["Obesity"].value_counts().reset_index()
+        contagem.columns = ["Nível de Obesidade", "Quantidade"]
+        
+        fig_target = px.bar(
+            contagem,
+            x="Nível de Obesidade",
+            y="Quantidade",
+            color="Nível de Obesidade",
+            color_discrete_sequence=px.colors.qualitative.Set2,
+            title="Distribuição dos Níveis de Obesidade",
+            text="Quantidade"
+        )
+        fig_target.update_traces(textposition="outside")
+        fig_target.update_layout(showlegend=False, height=500)
+        st.plotly_chart(fig_target, use_container_width=True)
+        
+        # Gráfico de pizza
+        col1, col2 = st.columns(2)
+        with col1:
+            fig_pie = px.pie(
+                contagem,
+                values="Quantidade",
+                names="Nível de Obesidade",
+                title="Proporção por Categoria",
+                color_discrete_sequence=px.colors.qualitative.Set2
+            )
+            fig_pie.update_traces(textposition="inside", textinfo="percent+label")
+            st.plotly_chart(fig_pie, use_container_width=True)
+        
+        with col2:
             st.markdown(
                 """
                 **Insights:**
-                - A distribuição é relativamente balanceada entre os 7 níveis de obesidade
+                - A distribuição é relativamente balanceada entre os 7 níveis
                 - Obesidade Tipo I é a classe mais frequente (~17%)
-                - Peso normal e insuficiente representam cerca de 26% da amostra
+                - Peso normal e insuficiente representam ~26% da amostra
+                - O dataset é adequado para classificação multiclasse
                 """
             )
-        else:
-            st.warning("Gráfico não encontrado.")
 
     with tab2:
         st.subheader("Fatores de Risco por Nível de Obesidade")
-
-        # Seletor de gráfico
-        graficos_bivar = {
-            "IMC (BMI)": "2_bivar_bmi_vs_obesity.png",
-            "Peso": "2_bivar_weight_vs_obesity.png",
-            "Idade": "2_bivar_age_vs_obesity.png",
-            "Atividade Física": "2_bivar_faf_vs_obesity.png",
-            "Histórico Familiar": "2_bivar_family_history_vs_obesity.png",
-            "Consumo de Alimentos Calóricos": "2_bivar_favc_vs_obesity.png",
-            "Transporte": "2_bivar_mtrans_vs_obesity.png",
+        
+        # Seletor de variável
+        variaveis_numericas = {
+            "IMC (BMI)": "BMI",
+            "Peso (kg)": "Weight",
+            "Altura (m)": "Height",
+            "Idade": "Age",
+            "Atividade Física (FAF)": "FAF",
+            "Consumo de Vegetais (FCVC)": "FCVC",
+            "Consumo de Água (CH2O)": "CH2O",
+            "Tempo em Eletrônicos (TUE)": "TUE"
         }
-
-        selecionado = st.selectbox("Selecione o fator de risco:", list(graficos_bivar.keys()))
-        img_path = PLOTS_DIR / graficos_bivar[selecionado]
-        if img_path.exists():
-            st.image(str(img_path), use_container_width=True)
+        
+        variaveis_categoricas = {
+            "Gênero": "Gender",
+            "Histórico Familiar": "family_history",
+            "Consumo de Alimentos Calóricos": "FAVC",
+            "Transporte": "MTRANS",
+            "Consumo de Álcool": "CALC",
+            "Hábito de Fumar": "SMOKE"
+        }
+        
+        tipo_var = st.radio("Tipo de variável:", ["Numérica", "Categórica"], horizontal=True)
+        
+        if tipo_var == "Numérica":
+            var_selecionada = st.selectbox("Selecione a variável:", list(variaveis_numericas.keys()))
+            coluna = variaveis_numericas[var_selecionada]
+            
+            # Boxplot interativo
+            fig_box = px.box(
+                df,
+                x="Obesity",
+                y=coluna,
+                color="Obesity",
+                color_discrete_sequence=px.colors.qualitative.Set2,
+                title=f"{var_selecionada} por Nível de Obesidade",
+                category_orders={"Obesity": df["Obesity"].value_counts().index.tolist()}
+            )
+            fig_box.update_layout(showlegend=False, height=500)
+            st.plotly_chart(fig_box, use_container_width=True)
+            
+            # Histograma por grupo
+            fig_hist = px.histogram(
+                df,
+                x=coluna,
+                color="Obesity",
+                marginal="box",
+                title=f"Distribuição de {var_selecionada}",
+                color_discrete_sequence=px.colors.qualitative.Set2,
+                barmode="overlay",
+                opacity=0.7
+            )
+            fig_hist.update_layout(height=400)
+            st.plotly_chart(fig_hist, use_container_width=True)
+            
+        else:
+            var_selecionada = st.selectbox("Selecione a variável:", list(variaveis_categoricas.keys()))
+            coluna = variaveis_categoricas[var_selecionada]
+            
+            # Gráfico de barras empilhadas
+            contagem_cat = df.groupby([coluna, "Obesity"]).size().reset_index(name="Quantidade")
+            
+            fig_bar = px.bar(
+                contagem_cat,
+                x=coluna,
+                y="Quantidade",
+                color="Obesity",
+                color_discrete_sequence=px.colors.qualitative.Set2,
+                title=f"{var_selecionada} por Nível de Obesidade",
+                barmode="group"
+            )
+            fig_bar.update_layout(height=500)
+            st.plotly_chart(fig_bar, use_container_width=True)
+            
+            # Sunburst chart
+            fig_sun = px.sunburst(
+                contagem_cat,
+                path=[coluna, "Obesity"],
+                values="Quantidade",
+                color="Quantidade",
+                color_continuous_scale="Viridis",
+                title=f"Hierarquia: {var_selecionada} → Obesidade"
+            )
+            fig_sun.update_layout(height=500)
+            st.plotly_chart(fig_sun, use_container_width=True)
 
     with tab3:
         st.subheader("Matriz de Correlação entre Variáveis Numéricas")
-        img_path = PLOTS_DIR / "3_correlation_heatmap.png"
-        if img_path.exists():
-            st.image(str(img_path), use_container_width=True)
-            st.markdown(
-                """
-                **Insights:**
-                - Forte correlação entre Peso e BMI (esperado)
-                - Correlação moderada entre Idade e Peso
-                - Atividade física (FAF) tem correlação negativa com peso
-                """
+        
+        # Selecionar apenas colunas numéricas
+        colunas_num = ["Age", "Height", "Weight", "BMI", "FCVC", "NCP", "CH2O", "FAF", "TUE"]
+        df_num = df[colunas_num]
+        
+        # Calcular correlação
+        corr_matrix = df_num.corr()
+        
+        # Heatmap interativo
+        fig_corr = px.imshow(
+            corr_matrix,
+            text_auto=".2f",
+            color_continuous_scale="RdBu_r",
+            title="Matriz de Correlação de Pearson",
+            aspect="auto"
+        )
+        fig_corr.update_layout(height=600)
+        st.plotly_chart(fig_corr, use_container_width=True)
+        
+        st.markdown(
+            """
+            **Insights:**
+            - **Forte correlação** entre Peso e BMI (0.87) - esperado pela fórmula do IMC
+            - **Correlação moderada** entre Idade e Peso
+            - **Atividade física (FAF)** tem correlação negativa com TUE (tempo em eletrônicos)
+            - Variáveis de hábitos alimentares mostram correlações fracas entre si
+            """
+        )
+        
+        # Scatter plot interativo
+        st.subheader("Explorar Correlações")
+        col1, col2 = st.columns(2)
+        with col1:
+            var_x = st.selectbox("Variável X:", colunas_num, index=2)  # Weight default
+        with col2:
+            var_y = st.selectbox("Variável Y:", colunas_num, index=3)  # BMI default
+        
+        fig_scatter = px.scatter(
+            df,
+            x=var_x,
+            y=var_y,
+            color="Obesity",
+            color_discrete_sequence=px.colors.qualitative.Set2,
+            title=f"Relação entre {var_x} e {var_y}",
+            trendline="ols",
+            hover_data=["Age", "Gender"]
+        )
+        fig_scatter.update_layout(height=500)
+        st.plotly_chart(fig_scatter, use_container_width=True)
+
+    with tab4:
+        st.subheader("Explorador Interativo de Dados")
+        
+        # Filtros
+        st.markdown("#### Filtros")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            generos = st.multiselect("Gênero:", df["Gender"].unique(), default=list(df["Gender"].unique()))
+        with col2:
+            idade_range = st.slider("Faixa de Idade:", int(df["Age"].min()), int(df["Age"].max()), (14, 61))
+        with col3:
+            obesidade_filtro = st.multiselect(
+                "Nível de Obesidade:", 
+                df["Obesity"].unique(), 
+                default=list(df["Obesity"].unique())
             )
-        else:
-            st.warning("Gráfico não encontrado.")
+        
+        # Aplicar filtros
+        df_filtrado = df[
+            (df["Gender"].isin(generos)) &
+            (df["Age"] >= idade_range[0]) &
+            (df["Age"] <= idade_range[1]) &
+            (df["Obesity"].isin(obesidade_filtro))
+        ]
+        
+        st.markdown(f"**Registros filtrados:** {len(df_filtrado)} de {len(df)}")
+        
+        # Gráfico 3D
+        fig_3d = px.scatter_3d(
+            df_filtrado,
+            x="Weight",
+            y="Height",
+            z="Age",
+            color="Obesity",
+            color_discrete_sequence=px.colors.qualitative.Set2,
+            title="Visualização 3D: Peso × Altura × Idade",
+            hover_data=["BMI", "FAF"]
+        )
+        fig_3d.update_layout(height=600)
+        st.plotly_chart(fig_3d, use_container_width=True)
+        
+        # Tabela de dados
+        if st.checkbox("Mostrar dados filtrados"):
+            st.dataframe(df_filtrado, use_container_width=True)
 
     # Métricas resumidas
     st.markdown("---")
