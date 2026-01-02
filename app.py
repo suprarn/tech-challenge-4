@@ -19,7 +19,7 @@ import streamlit as st
 # Configuração da página
 st.set_page_config(
     page_title="Sistema de Diagnóstico de Obesidade",
-    page_icon="🏥",
+    page_icon="H",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -110,7 +110,7 @@ LABELS_PT = {
 
 def pagina_predicao():
     """Página do sistema preditivo."""
-    st.title("🩺 Sistema Preditivo de Obesidade")
+    st.title("Sistema Preditivo de Obesidade")
     st.markdown("---")
     st.markdown(
         """
@@ -127,7 +127,7 @@ def pagina_predicao():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.subheader("📋 Dados Pessoais")
+        st.subheader("Dados Pessoais")
         gender = st.selectbox("Gênero", ["Female", "Male"], format_func=lambda x: "Feminino" if x == "Female" else "Masculino")
         age = st.number_input("Idade (anos)", min_value=14, max_value=80, value=25)
         height = st.number_input("Altura (m)", min_value=1.40, max_value=2.20, value=1.70, step=0.01)
@@ -139,7 +139,7 @@ def pagina_predicao():
         )
 
     with col2:
-        st.subheader("🍎 Hábitos Alimentares")
+        st.subheader("Hábitos Alimentares")
         favc = st.selectbox(
             "Consumo frequente de alimentos calóricos",
             ["yes", "no"],
@@ -159,7 +159,7 @@ def pagina_predicao():
         )
 
     with col3:
-        st.subheader("🏃 Estilo de Vida")
+        st.subheader("Estilo de Vida")
         smoke = st.selectbox("Hábito de fumar", ["no", "yes"], format_func=lambda x: "Sim" if x == "yes" else "Não")
         ch2o = st.slider("Consumo diário de água", 1.0, 3.0, 2.0, 0.1, help="1=<1L, 2=1-2L, 3=>2L")
         scc = st.selectbox("Monitora calorias", ["no", "yes"], format_func=lambda x: "Sim" if x == "yes" else "Não")
@@ -180,7 +180,7 @@ def pagina_predicao():
     st.markdown("---")
 
     # Botão de predição
-    if st.button("🔍 Realizar Diagnóstico", type="primary", use_container_width=True):
+    if st.button("Realizar Diagnóstico", type="primary", use_container_width=True):
         # Calcular BMI
         bmi = weight / (height**2)
 
@@ -216,7 +216,7 @@ def pagina_predicao():
 
         # Exibir resultado
         st.markdown("---")
-        st.markdown("## 📊 Resultado do Diagnóstico")
+        st.markdown("## Resultado do Diagnóstico")
 
         col_res1, col_res2 = st.columns([1, 2])
 
@@ -242,12 +242,12 @@ def pagina_predicao():
             st.markdown(f"**Diagnóstico:** {info['descricao']}")
             st.markdown(f"**Recomendação:** {info['recomendacao']}")
 
-        st.info("⚕️ Este é um sistema de apoio à decisão. O diagnóstico final deve ser realizado por um profissional de saúde.")
+        st.info("Este é um sistema de apoio à decisão. O diagnóstico final deve ser realizado por um profissional de saúde.")
 
 
 def pagina_dashboard():
     """Página do dashboard analítico com gráficos interativos."""
-    st.title("📈 Dashboard Analítico")
+    st.title("Dashboard Analítico")
     st.markdown("---")
     st.markdown(
         """
@@ -275,10 +275,10 @@ def pagina_dashboard():
 
     # Tabs para organizar os gráficos
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 Distribuição do Target", 
-        "🔗 Análise Bivariada", 
-        "📉 Correlações",
-        "🔍 Explorador de Dados"
+        "Distribuição do Target", 
+        "Análise Bivariada", 
+        "Correlações",
+        "Explorador de Dados"
     ])
 
     with tab1:
@@ -513,7 +513,7 @@ def pagina_dashboard():
 
     # Métricas resumidas
     st.markdown("---")
-    st.subheader("📋 Métricas do Modelo")
+    st.subheader("Métricas do Modelo")
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Acurácia", "99.04%", "Meta: 75%")
     col2.metric("Precision Média", "0.99")
@@ -523,19 +523,19 @@ def pagina_dashboard():
 
 def pagina_sobre():
     """Página sobre o projeto."""
-    st.title("ℹ️ Sobre o Projeto")
+    st.title("Sobre o Projeto")
     st.markdown("---")
 
     st.markdown(
         """
         ## Tech Challenge Fase 4 - FIAP/POSTECH Data Analytics
         
-        ### 🎯 Objetivo
+        ### Objetivo
         Desenvolver um sistema de Machine Learning para auxiliar profissionais de saúde
         no diagnóstico preditivo de níveis de obesidade, considerando a natureza 
         multifatorial desta condição médica.
         
-        ### 🔬 Metodologia
+        ### Metodologia
         
         1. **Análise Exploratória de Dados (EDA)**
            - Análise univariada e bivariada de 17 variáveis
@@ -552,7 +552,7 @@ def pagina_sobre():
            - Validação: Stratified 5-Fold Cross-Validation
            - Métricas: Accuracy, Precision, Recall, F1-Score
         
-        ### 📊 Resultados
+        ### Resultados
         
         | Métrica | Valor |
         |---------|-------|
@@ -561,19 +561,18 @@ def pagina_sobre():
         | Precision Média | 0.99 |
         | Recall Médio | 0.99 |
         
-        ### 🛠️ Stack Tecnológica
+        ### Stack Tecnológica
         - Python, Pandas, NumPy
         - Scikit-learn
         - Matplotlib, Seaborn
         - Streamlit
         
-        ### 📁 Repositório
-        O código completo está disponível no GitHub, organizado em fases conforme
-        documentado no roadmap do projeto.
+        ### Repositório
+        O código completo está disponível no GitHub, organizado em fases e documentado.
         
         ---
         
-        ⚕️ **Aviso Legal**: Este sistema é uma ferramenta de apoio à decisão e não
+        **Aviso Legal**: Este sistema é uma ferramenta meramente informativa e não
         substitui a avaliação de um profissional de saúde qualificado.
         """
     )
@@ -582,12 +581,12 @@ def pagina_sobre():
 def main():
     """Função principal da aplicação."""
     # Sidebar com navegação
-    st.sidebar.title("🏥 Sistema de Diagnóstico")
+    st.sidebar.title("Sistema de Diagnóstico")
     st.sidebar.markdown("---")
 
     pagina = st.sidebar.radio(
         "Navegação",
-        ["🩺 Sistema Preditivo", "📈 Dashboard Analítico", "ℹ️ Sobre"],
+        ["Sistema Preditivo", "Dashboard Analítico", "Sobre"],
         label_visibility="collapsed",
     )
 
@@ -596,14 +595,20 @@ def main():
         """
         **Tech Challenge 4**  
         FIAP/POSTECH  
-        Data Analytics
+        Data Analytics  
+          
+
+
+
+        **Desenvolvido por:**  
+        Arnaldo Janssen Tavares Toledo Laudares
         """
     )
 
     # Roteamento de páginas
-    if pagina == "🩺 Sistema Preditivo":
+    if pagina == "Sistema Preditivo":
         pagina_predicao()
-    elif pagina == "📈 Dashboard Analítico":
+    elif pagina == "Dashboard Analítico":
         pagina_dashboard()
     else:
         pagina_sobre()
