@@ -1,4 +1,4 @@
-# 🏥 Sistema de Diagnóstico Preditivo de Obesidade
+# Sistema de Diagnóstico Preditivo de Obesidade
 
 > **Tech Challenge Fase 4 - FIAP/POSTECH Data Analytics**
 
@@ -11,7 +11,15 @@ Sistema de Machine Learning para apoio à decisão médica no diagnóstico de n�
 
 ---
 
-## 📋 Sobre o Projeto
+## Acesse a Aplicação
+
+A aplicação está disponível online na Streamlit Cloud:
+
+**[Acessar Sistema de Diagnóstico](https://seu-app.streamlit.app)**
+
+---
+
+## Sobre o Projeto
 
 O sistema utiliza um modelo de **Random Forest Classifier** treinado com dados de hábitos alimentares, estilo de vida e características físicas para prever o nível de obesidade de pacientes em 7 categorias:
 
@@ -27,56 +35,26 @@ O sistema utiliza um modelo de **Random Forest Classifier** treinado com dados d
 
 ---
 
-## 🚀 Como Executar
+## Funcionalidades
 
-### Pré-requisitos
-- Python 3.10 ou superior
-- pip
+### Sistema Preditivo
+- Formulário intuitivo para inserção de dados do paciente
+- Predição instantânea do nível de obesidade
+- Recomendações clínicas personalizadas
 
-### Instalação
+### Dashboard Analítico
+- Visualizações interativas com Plotly
+- Análise de fatores de risco por nível de obesidade
+- Matriz de correlação entre variáveis
+- Explorador de dados 3D com filtros dinâmicos
 
-```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/tech-challenge-4.git
-cd tech-challenge-4
-
-# Instale as dependências
-pip install -r requirements.txt
-```
-
-### Executando a Aplicação
-
-```bash
-streamlit run app.py
-```
-
-Acesse: http://localhost:8501
+### Sobre
+- Metodologia utilizada
+- Métricas de performance do modelo
 
 ---
 
-## 📁 Estrutura do Projeto
-
-```
-tech-challenge-4/
-├── 📂 data/
-│   ├── Obesity.csv              # Dataset original
-│   └── dicionario.txt           # Descrição das variáveis
-├── 📂 scripts/
-│   ├── 1_eda.ipynb              # Análise Exploratória (FASE 1)
-│   ├── 2_preprocessing.py       # Pipeline de Features (FASE 2)
-│   └── 3_training.py            # Treinamento do Modelo (FASE 3)
-├── 📂 plots/                     # Visualizações do EDA
-├── 📂 steering/                  # Documentos de direção do projeto
-├── app.py                        # Aplicação Streamlit (FASE 4)
-├── modelo.pkl                    # Modelo serializado
-├── label_encoder.pkl             # Encoder do target
-├── requirements.txt              # Dependências
-└── README.md                     # Este arquivo
-```
-
----
-
-## 📊 Métricas do Modelo
+## Métricas do Modelo
 
 | Métrica | Valor |
 |---------|-------|
@@ -88,47 +66,68 @@ tech-challenge-4/
 
 ---
 
-## 🛠️ Stack Tecnológica
+## Executar Localmente
+
+### Pré-requisitos
+- Python 3.10 ou superior
+
+### Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/suprarn/tech-challenge-4.git
+cd tech-challenge-4
+
+# Instale as dependências
+pip install -r requirements.txt
+
+# Execute a aplicação
+streamlit run app.py
+```
+
+Acesse: http://localhost:8501
+
+---
+
+## Estrutura do Repositório
+
+```
+tech-challenge-4/
+├── data/
+│   ├── Obesity.csv              # Dataset original
+│   └── dicionario.txt           # Descrição das variáveis
+├── scripts/
+│   ├── 1_eda.ipynb              # Análise Exploratória (FASE 1)
+│   ├── 2_preprocessing.py       # Pipeline de Features (FASE 2)
+│   └── 3_training.py            # Treinamento do Modelo (FASE 3)
+├── plots/                       # Visualizações geradas no EDA
+├── app.py                       # Aplicação Streamlit
+├── modelo.pkl                   # Modelo serializado
+├── label_encoder.pkl            # Encoder do target
+├── requirements.txt             # Dependências Python
+└── README.md
+```
+
+---
+
+## Stack Tecnológica
 
 - **Linguagem**: Python 3.10+
-- **Machine Learning**: Scikit-learn
-- **Visualização**: Matplotlib, Seaborn
+- **Machine Learning**: Scikit-learn (RandomForestClassifier)
+- **Visualização**: Plotly, Matplotlib, Seaborn
 - **Interface**: Streamlit
 - **Dados**: Pandas, NumPy
 
 ---
 
-## 📱 Funcionalidades da Aplicação
+## Aviso Legal
 
-### 🩺 Sistema Preditivo
-- Formulário intuitivo para inserção de dados do paciente
-- Predição instantânea do nível de obesidade
-- Recomendações clínicas personalizadas
-
-### 📈 Dashboard Analítico
-- Visualizações interativas dos dados
-- Análise de fatores de risco
-- Matriz de correlação entre variáveis
-
-### ℹ️ Sobre
-- Metodologia utilizada
-- Métricas de performance
-- Informações técnicas
+Este sistema é uma ferramenta **meramente informativa** e não substitui a avaliação de um profissional de saúde qualificado. O diagnóstico final deve ser sempre realizado por um médico.
 
 ---
 
-## 👥 Equipe
+## Licença
 
-Tech Challenge Fase 4 - FIAP/POSTECH Data Analytics
+Projeto desenvolvido para fins acadêmicos - Tech Challenge Fase 4, FIAP/POSTECH Data Analytics.
 
----
-
-## ⚠️ Aviso Legal
-
-Este sistema é uma ferramenta de **apoio à decisão** e não substitui a avaliação de um profissional de saúde qualificado. O diagnóstico final deve ser sempre realizado por um médico.
-
----
-
-## 📄 Licença
-
-Este projeto foi desenvolvido para fins acadêmicos como parte do Tech Challenge da FIAP/POSTECH.
+**Autor:** Arnaldo Janssen Tavares Toledo Laudares
