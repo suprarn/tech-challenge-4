@@ -69,5 +69,3 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
-# Project specific - Documentos internos de direção do projeto
-steering/
