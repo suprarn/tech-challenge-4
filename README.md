@@ -102,8 +102,8 @@ tech-challenge-4/
 │   └── 3_training.py            # Treinamento do Modelo (FASE 3)
 ├── plots/                       # Visualizações geradas no EDA
 ├── app.py                       # Aplicação Streamlit
-├── modelo.pkl                   # Modelo serializado
-├── label_encoder.pkl            # Encoder do target
+├── modelo.joblib                # Modelo serializado (joblib)
+├── label_encoder.joblib         # Encoder do target (joblib)
 ├── requirements.txt             # Dependências Python
 └── README.md
 ```
