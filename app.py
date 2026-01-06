@@ -9,9 +9,9 @@ Páginas:
 3. Sobre o Projeto - Informações sobre metodologia e modelo
 """
 
-import pickle
 from pathlib import Path
 
+import joblib
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -26,18 +26,16 @@ st.set_page_config(
 
 # Caminhos
 PROJECT_ROOT = Path(__file__).resolve().parent
-MODEL_PATH = PROJECT_ROOT / "modelo.pkl"
-ENCODER_PATH = PROJECT_ROOT / "label_encoder.pkl"
+MODEL_PATH = PROJECT_ROOT / "modelo.joblib"
+ENCODER_PATH = PROJECT_ROOT / "label_encoder.joblib"
 PLOTS_DIR = PROJECT_ROOT / "plots"
 
 
 @st.cache_resource
 def carregar_modelo():
     """Carrega o modelo e o encoder do disco."""
-    with open(MODEL_PATH, "rb") as f:
-        modelo = pickle.load(f)
-    with open(ENCODER_PATH, "rb") as f:
-        encoder = pickle.load(f)
+    modelo = joblib.load(MODEL_PATH)
+    encoder = joblib.load(ENCODER_PATH)
     return modelo, encoder
 
 

@@ -9,7 +9,7 @@ FASE 3 do Tech Challenge 4 - FIAP/POSTECH Data Analytics
 
 from __future__ import annotations
 
-import pickle
+import joblib
 import sys
 from pathlib import Path
 
@@ -42,8 +42,8 @@ obter_target_encoder = preprocessing_module.obter_target_encoder
 
 # Configurações
 DATA_PATH = PROJECT_ROOT / "data" / "Obesity.csv"
-MODEL_PATH = PROJECT_ROOT / "modelo.pkl"
-ENCODER_PATH = PROJECT_ROOT / "label_encoder.pkl"
+MODEL_PATH = PROJECT_ROOT / "modelo.joblib"
+ENCODER_PATH = PROJECT_ROOT / "label_encoder.joblib"
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 N_FOLDS = 5
@@ -167,12 +167,10 @@ def salvar_artefatos(pipeline: object, label_encoder: object) -> None:
     """
     print("\n[5/5] Salvando artefatos...")
 
-    with open(MODEL_PATH, "wb") as f:
-        pickle.dump(pipeline, f)
+    joblib.dump(pipeline, MODEL_PATH)
     print(f"     - Modelo salvo: {MODEL_PATH}")
 
-    with open(ENCODER_PATH, "wb") as f:
-        pickle.dump(label_encoder, f)
+    joblib.dump(label_encoder, ENCODER_PATH)
     print(f"     - Encoder salvo: {ENCODER_PATH}")
 
 
