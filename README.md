@@ -15,7 +15,7 @@ Sistema de Machine Learning para apoio à decisão médica no diagnóstico de n�
 
 A aplicação está disponível online na Streamlit Cloud:
 
-**[Acessar Sistema de Diagnóstico](https://seu-app.streamlit.app)**
+**[Acessar Sistema de Diagnóstico](https://sdo-techc4-arnaldo.streamlit.app/)**
 
 ---
 
